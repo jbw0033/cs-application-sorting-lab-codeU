@@ -63,8 +63,42 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+        if(list.size() < 2) {
+        	return list;
+        }
+    
+        List<T> left = mergeSort(list.subList(0, list.size()/2), comparator);
+        List<T> right = mergeSort(list.subList(list.size()/2, list.size()), comparator);
+        
+        return merge(left, right, comparator);
+	}
+	
+	private List<T> merge(List<T> left, List<T> right, Comparator<T> comparator) {
+		List<T> result = new  ArrayList<T>();
+		int j = 0, i = 0;
+		while(i < left.size() && j < right.size()) {
+			if (comparator.compare(left.get(i),right.get(j)) >= 0) {
+				result.add(right.get(j));
+				j++;
+			}
+			else {
+				result.add(left.get(i));
+				i++;
+			}
+		}
+		if(i >= left.size()) {
+			while(j < right.size()) {
+				result.add(right.get(j));
+				j++;
+			}
+		}
+		else if(j >= right.size()) {
+			while(i < left.size()) {
+				result.add(left.get(i));
+				i++;
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -75,7 +109,12 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
+        PriorityQueue<T> heap = new PriorityQueue<T>();
+        heap.addAll(list);
+        list.clear();
+        while(!heap.isEmpty()) {
+        	list.add(heap.poll());
+        }
 	}
 
 	
@@ -89,8 +128,23 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+        PriorityQueue<T> heap = new PriorityQueue<T>();
+        List<T> result = new ArrayList<T>();
+        for(T element: list) {
+        	if(k > heap.size()) {
+        		heap.add(element);
+        	}
+        	else {
+        		if(comparator.compare(element, heap.peek()) > 0) {
+        			heap.poll();
+        			heap.add(element);
+        		}
+        	}
+        }
+        while(!heap.isEmpty()) {
+        	result.add(heap.poll());
+        }
+        return result;
 	}
 
 	
